@@ -63,6 +63,8 @@ def lesson(q):
         return
     for i,(prompt,block) in enumerate(zip(q['guide_questions'],q['learning_blocks']),1):
         st.markdown('<div class="lesson-box"><div class="lesson-head">'+str(i)+'. '+prompt+'</div><div class="lesson-body">'+manual_mark(block)+'</div></div>',unsafe_allow_html=True)
+    if q['id']==32:
+        st.image(str(Path(__file__).with_name('pyramid.png')),caption='Піраміда безпеки — з оригінального документа',use_container_width=True)
     st.markdown('#### 🧠 Згадуємо за планом')
     st.caption('Спробуй відповісти на ці маленькі запитання без тексту вище.')
     for i,prompt in enumerate(q['guide_questions'],1):
@@ -72,7 +74,7 @@ def lesson(q):
             st.markdown(f'**{prompt}** — {cue}')
     st.markdown('#### 🗣 Коротка відповідь для іспиту')
     st.caption('Це приклад, як можна відповісти зв’язно своїми словами. Жовті слова — опори для пам’яті.')
-    st.markdown('<div class="lesson-box"><div class="lesson-body">'+mark(q['study_answer'])+'</div></div>',unsafe_allow_html=True)
+    st.markdown('<div class="lesson-box"><div class="lesson-body">'+(manual_mark(q['study_answer_marked']) if q.get('study_answer_marked') else mark(q['study_answer']))+'</div></div>',unsafe_allow_html=True)
 
 def memory_plan(q,answers=False):
     st.markdown('#### 🧠 Спробуй пригадати')
@@ -117,7 +119,7 @@ elif mode=='🎫 Треную білет із 5 запитань':
         with st.expander('🔍 Перевірити відповідь'):
             memory_plan(q,answers=True)
             st.markdown('**Коротка усна відповідь:**')
-            st.markdown('<div class="lesson-box"><div class="lesson-body">'+mark(q['study_answer'])+'</div></div>',unsafe_allow_html=True)
+            st.markdown('<div class="lesson-box"><div class="lesson-body">'+(manual_mark(q['study_answer_marked']) if q.get('study_answer_marked') else mark(q['study_answer']))+'</div></div>',unsafe_allow_html=True)
             if q['missing']:st.warning('У документі немає затвердженої відповіді.')
             original(q)
         st.divider()
@@ -146,7 +148,7 @@ else:
     if st.button('🔑 Потрібні опорні слова',use_container_width=True):st.session_state.show_answer=not st.session_state.show_answer
     if st.session_state.show_answer:memory_plan(q,answers=True)
     with st.expander('📖 Перевірити коротку відповідь'):
-        st.markdown('<div class="lesson-box"><div class="lesson-body">'+mark(q['study_answer'])+'</div></div>',unsafe_allow_html=True)
+        st.markdown('<div class="lesson-box"><div class="lesson-body">'+(manual_mark(q['study_answer_marked']) if q.get('study_answer_marked') else mark(q['study_answer']))+'</div></div>',unsafe_allow_html=True)
 if mode!='📚 Шукаю запитання':
     original(q)
     st.markdown('#### 💛 Як вийшло?')
